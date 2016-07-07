@@ -1,0 +1,145 @@
+{% extends 'rail/base.html' %}
+{% block albums_active %}active{% endblock %}
+
+{% block body %}
+<div class="albums-container container-fluid">
+
+    <!-- Albums -->
+    <div class="row">
+        <div class="col-sm-12" style="color:#FCFCFC">
+            <h4>{{ user.username }} - vonatinformációk. Megjelenítési sorrend:  |  <a href="{% url 'rail:index_creation_filter' %}">létrehozás szerint csökkenő </a>  |  <a href="{% url 'rail:index' %}">  módosítás szerint csökkenő</a>  |</h4>
+        </div>
+        {% if albums %}
+            {% for album in albums %}
+                <div class="col-sm-4 col-lg-2">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <h4>{{ album.vnev }}</h4>
+                            <small>Indul: {{ album.indulas }} <br> {{ album.indulas_ido }}</small><br>
+                            <small style="color:grey">Létr.: {{ album.created_at }} <br> {{ album.user }}</small><br><br>
+
+                            <!-- View Details -->
+                            <a href="{% url 'rail:detail' album.id %}" class="btn btn-primary btn-sm" role="button">Részletek</a>
+
+                            <!-- Update Album -->
+                            <form action="{% url 'rail:update_album' album.id %}" method="get" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="album_id" value="{{ album.id }}" />
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                </button>
+                            </form>
+
+                            <!-- Delete Album -->
+                            <form action="{% url 'rail:delete_album' album.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="album_id" value="{{ album.id }}" />
+                                <button type="submit" class="btn btn-default btn-sm" onclick="return confirm('Biztosan törli a vonatot?')">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </form>
+
+
+
+                        </div>
+                    </div>
+                </div>
+                {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+            {% endfor %}
+        {% else %}
+            <div class="col-sm-12">
+                <br>
+                <a href="{% url 'rail:create_album' %}">
+                    <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp; Új vonat hozzáadása
+                    </button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- If user searches and there are songs -->
+    {% if vpes %}
+        <div class="row">
+            <div class="col-sm-12" style="color:#FCFCFC">
+                <h4>keresésnek megfelelt VPE számok</h4>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>VPE szám</th>
+                                    <th>Vonat</th>
+                                    <th>Tényleges indulás</th>
+                                    <th>Visszaigazolt/Tényleges kilépés</th>
+                                    <th>Tényleges érkezés</th>
+                                    <th>Szerkesztette</th>
+                                    <th>Megjegyzések</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vpe in vpes %}
+                                    <tr>
+                                        <td><a href="{% url 'rail:update_vpe' vpe.album.id vpe.id %}">{{ vpe.vpe }}</a></td>
+                                        <td>{{ vpe.album.vnev }} - {{ vpe.album.indulas }} {{ vpe.album.indulas_ido }}</td>
+                                        <td>{{ vpe.indulas_ido }}</td>
+                                        {% if vpe.kilepes_igazolt or vpe.kilepes_tenyleges %}
+                                        <td>{{ vpe.kilepes_igazolt }} / {{ vpe.kilepes_tenyleges }}</td>
+                                        {% else %}
+                                        <td>N/A</td>
+                                        {% endif %}
+                                        <td>{{ vpe.erkezes_ido }}</td>
+                                        <td style="color:grey">{{ vpe.created_at }} - {{ vpe.user}}</td>
+                                        <td>{{ vpe.megjegyzesek }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+        <!-- If user searches and there are songs -->
+    {% if mozdonys %}
+        <div class="row">
+            <div class="col-sm-12" style="color:#FCFCFC">
+                <h4>keresésnek mefelelt mozdonyok</h4>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mozdony</th>
+                                    <th>Vonat</th>
+                                    <th>Rendelve</th>
+                                    <th>Szerkesztette</th>
+                                    <th>Megjegyzések</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mozdony in mozdonys %}
+                                    <tr>
+                                        <td><a href="{% url 'rail:update_mozdony' mozdony.album.id mozdony.id %}">{{ mozdony.mozdony }}</td>
+                                        <td>{{ mozdony.album.vnev }} - {{ mozdony.album.indulas }} {{ mozdony.album.indulas_ido }}</td>
+                                        <td>{{ mozdony.mozdony_hozzarendelve }}</td>
+                                        <td>{{ mozdony.created_at }} - {{ mozdony.user}}</td>
+                                        <td>{{ mozdony.megjegyzesek }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+</div>
+{% endblock %}

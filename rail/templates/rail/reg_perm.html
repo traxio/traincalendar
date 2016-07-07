@@ -1,0 +1,31 @@
+{% extends 'rail/base.html' %}
+{% block title %}Jogosultság{% endblock %}
+{% block vpes_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid vpes-container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation"><input type=button value="Vissza" class="btn btn-warning btn-block" onClick="javascript:history.go(-1);"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                   (!) A TrainCalendar-t jelenleg a Train Hungary Magánvasút Kft. zárva tartja külső regisztrációkkal szemben. Ha az applikáció felkelltette érdeklődését vegye fel a kapcsolatot a társaság honlapján jelzett elérhetőségeken keresztűl.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'rail/base.html' %}
+{% block title %}Új vonat hozzáadása{% endblock %}
+{% block albums_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Új Vonat hozzáadása</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% include 'rail/form_template.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Mi a TrainCalendar?</h3>
+                    <p>Olyan applikáció (továbbiakban TC), ami lehetővé teszi az adatforgalom felgyorsítását a társaság különböző feladatait ellátó munkatársai között.</p>
+                    <h3>Hogy adok hozzá vonatot?</h3>
+                    <p>Csupán ki kell tölteni a bal oldalon látható mezők közül az összeset, vagy minimum a csillagozottakat és zöld gomb.</p>
+                    <h3>Tippek:</h3>
+                    <ul>
+                        <li>Nem kötelező azonnal kitölteni az összes mezőt.</li>
+                        <li>A vonat létrehozásához TC-ben a minimum követelmény megadni a csillaggal jelölt mezőket (*)</li>
+                        <li>A létrehozott vonat adatait a későbbiekben is lehet frissíteni, vagy kiegészíteni</li>
+                        <li>Segítség a +36 30 461 9824 telefonszámon.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

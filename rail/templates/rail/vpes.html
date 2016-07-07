@@ -1,0 +1,60 @@
+{% extends 'rail/base.html' %}
+{% block title %}All vpes{% endblock %}
+{% block vpes_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid vpes-container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" {% if filter_by == 'all' %}class="active"{% endif %}><a href="{% url 'rail:vpes' 'all' %}">Összes</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>VPE szám</th>
+                                <th>Vonat</th>
+                                <th>Tényleges indulás</th>
+                                <th>Visszaigazolt/Tényleges kilépés</th>
+                                <th>Tényleges érkezés</th>
+                                <th>Szerkesztette</th>
+                                <th>Megjegyzések</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vpe in vpe_list %}
+                                <tr>
+                                    <td><a href="{% url 'rail:update_vpe' vpe.album.id vpe.id %}">{{ vpe.vpe }}</a></td>
+                                    <td>{{ vpe.album.vnev }} - {{ vpe.album.indulas }} {{ vpe.album.indulas_ido }}</td>
+                                    <td>{{ vpe.indulas_ido }}</td>
+                                    {% if vpe.kilepes_igazolt or vpe.kilepes_tenyleges %}
+                                    <td>{{ vpe.kilepes_igazolt }} / {{ vpe.kilepes_tenyleges }}</td>
+                                    {% else %}
+                                    <td>N/A</td>
+                                    {% endif %}
+                                    <td>{{ vpe.erkezes_ido }}</td>
+                                    <td style="color:grey">{{ vpe.created_at }} - {{ vpe.user}}</td>
+                                    <td>{{ vpe.megjegyzesek }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

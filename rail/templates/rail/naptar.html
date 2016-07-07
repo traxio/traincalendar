@@ -1,0 +1,43 @@
+{% extends 'rail/base.html' %}
+{% block title %}Naptári megjelenítés{% endblock %}
+
+{% block body %}
+
+{% load staticfiles %}
+
+<script src="{% static 'rail/fullcalendar/moment.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'rail/js/jquery.js' %}" type="text/javascript"></script>
+<script src="{% static 'rail/js/jquery-ui.js' %}" type="text/javascript"></script>
+<link rel="stylesheet" href="{% static 'rail/fullcalendar/fullcalendar.css' %}">
+<link rel="stylesheet" href="{% static 'rail/css/jquery-ui.css' %}">
+<script src="{% static 'rail/fullcalendar/fullcalendar.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'rail/fullcalendar/lang-all.js' %}" type="text/javascript"></script>
+<script>
+    var album_src = "{% url 'vonatjson' %}"
+</script>
+<script src="{% static 'rail/fullcalendar/naptar.js' %}" type="text/javascript"></script>
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <!-- Right Song Info -->
+        <div class="col-sm-12">
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div id="calendar">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

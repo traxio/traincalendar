@@ -1,0 +1,128 @@
+{% extends 'rail/base.html' %}
+{% block title %}{{ album }}{% endblock %}
+{% block albums_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid vpes-container">
+
+    <div class="row">
+
+        <!-- Left Album Info -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h1><small>{{ album.vnev }} </small></h1>
+                    Indulás: {{ album.indulas }} - {{album.indulas_ido}}<br>
+                    {% if album.rakott == True %}
+                    Rakomány: {% if album.rakomany_fajta %} {{ album.rakomany_fajta }} {% else %} N/A {% endif %}<br>
+                    {% else %}
+                    ÜRES<br>
+                    {% endif %}
+                    Bruttó tonna: {% if album.brutto_tonna %} {{ album.brutto_tonna }} {% else %} 0 {% endif %} t<br>
+                    {% if album.belepes or album.belepes_ido %}
+                    Belépés országba: {% if album.belepes %} {{ album.belepes }} {% else %} nincs megadva a hely {% endif %} -
+                                      {% if album.belepes_ido %} {{album.belepes_ido}} {% else %} nincs megadva az ido {% endif %} <br>
+                    {% endif %}
+                    {% if album.kilepes %}
+                    Kilépés országból: {{ album.kilepes }} <br>
+                    {% endif %}
+                    Érkezés: {% if album.erkezes %} {{ album.erkezes }} {% else %} N/A {% endif %} <br>
+                    Módosítva: {{ album.created_at }} - {{ album.user }}<br>
+                    Fékhossz: {% if album.fekhossz %} {{ album.fekhossz }} {% else %} N/A {% endif %}<br>
+                    Legutóbb ismert helyzet: {% if album.helyzet %} {{ album.helyzet }} {% else %} N/A {% endif %}<br>
+                    Ügyfélreferens megjegyzés: {% if album.megjegyzesek %} {{ album.megjegyzesek }} {% else %} N/A {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right vpe Info -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" class="active"><a href="{% url 'rail:detail' album.id %}">Összes megtekintése</a></li>
+                <li role="presentation"><a href="{% url 'rail:create_vpe' album.id %}">VPE szám hozzáadása</a></li>
+                <li role="presentation"><a href="{% url 'rail:create_mozdony' album.id %}">Mozdony hozzárendelése</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3>Diszpécserek műveletei - {{ album.vnev }} vonat</h3>
+
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Hozzáadott művelet</th>
+                            <th>Szám</th>
+                            <th>Hozzáadta</th>
+                            <th>Megjegyzés</th>
+                            <th>Erre vonatkozó művelet</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for vpe in album.vpe_set.all %}
+                            <tr>
+                                <td style="color:blue">VPE szám </td>
+                                <td style="color:blue"><a href="{% url 'rail:view_vpe' album.id vpe.id %}">{{ vpe.vpe }} </a></td>
+                                <td>{{ vpe.created_at }} - {{ vpe.user }}</td>
+                                <td>{{ vpe.megjegyzesek }}</td>
+                                <td>
+                                    <form action="{% url 'rail:delete_vpe' album.id vpe.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="vpe_id" value="{{ vpe.id }}" />
+                                        <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Biztos töröl?')">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Törlés
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rail:update_vpe' album.id vpe.id %}" method="get" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="vpe_id" value="{{ vpe.id }}" />
+                                        <button type="submit" class="btn btn-warning btn-xs">
+                                            <span class="glyphicon glyphicon-edit"></span>&nbsp; Módosítás
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% for mozdony in album.mozdony_set.all %}
+                            <tr>
+                                <td style="color:green">Mozdony</td>
+                                <td style="color:green"><a href="{% url 'rail:view_mozdony' album.id mozdony.id %}">{{ mozdony.mozdony }}</a></td>
+                                <td>{{ mozdony.created_at }} - {{ mozdony.user }}</td>
+                                <td>{{ mozdony.megjegyzesek }}</td>
+                                <td>
+                                    <form action="{% url 'rail:delete_mozdony' album.id mozdony.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="mozdony_id" value="{{ mozdony.id }}" />
+                                        <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Biztos töröl?')">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Törlés
+                                        </button>
+                                    </form>
+                                    <form action="{% url 'rail:update_mozdony' album.id mozdony.id %}" method="get" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="mozdony_id" value="{{ mozdony.id }}" />
+                                        <button type="submit" class="btn btn-warning btn-xs">
+                                            <span class="glyphicon glyphicon-edit"></span>&nbsp; Módosítás
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

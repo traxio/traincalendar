@@ -1,0 +1,52 @@
+{% extends 'rail/base.html' %}
+{% block title %}All mozdonys{% endblock %}
+{% block mozdonys_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid mozdonys-container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" {% if filter_by == 'all' %}class="active"{% endif %}><a href="{% url 'rail:mozdonys' 'all' %}">Összes</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mozdony</th>
+                                <th>Vonat</th>
+                                <th>Rendelve</th>
+                                <th>Szerkesztette</th>
+                                <th>Megjegyzések</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mozdony in mozdony_list %}
+                                <tr>
+                                    <td><a href="{% url 'rail:update_mozdony' mozdony.album.id mozdony.id %}">{{ mozdony.mozdony }}</td>
+                                    <td>{{ mozdony.album.vnev }} - {{ mozdony.album.indulas }} {{ mozdony.album.indulas_ido }}</td>
+                                    <td>{{ mozdony.mozdony_hozzarendelve }}</td>
+                                    <td>{{ mozdony.created_at }} - {{ mozdony.user}}</td>
+                                    <td>{{ mozdony.megjegyzesek }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

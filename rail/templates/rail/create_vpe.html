@@ -1,0 +1,72 @@
+{% extends 'rail/base.html' %}
+{% block title %}VPE szám hozzárendelés{% endblock %}
+{% block albums_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Left Album Info -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h1><small>{{ album.vnev }} </small></h1>
+                    Indulás: {{ album.indulas }} - {{album.indulas_ido}}<br>
+                    {% if album.rakott == True %}
+                    Rakomány: {% if album.rakomany_fajta %} {{ album.rakomany_fajta }} {% else %} N/A {% endif %}<br>
+                    {% else %}
+                    ÜRES<br>
+                    {% endif %}
+                    Bruttó tonna: {% if album.brutto_tonna %} {{ album.brutto_tonna }} {% else %} 0 {% endif %} t<br>
+                    {% if album.belepes or album.belepes_ido %}
+                    Belépés országba: {% if album.belepes %} {{ album.belepes }} {% else %} nincs megadva a hely {% endif %} -
+                                      {% if album.belepes_ido %} {{album.belepes_ido}} {% else %} nincs megadva az ido {% endif %} <br>
+                    {% endif %}
+                    {% if album.kilepes %}
+                    Kilépés országból: {{ album.kilepes }} <br>
+                    {% endif %}
+                    Érkezés: {% if album.erkezes %} {{ album.erkezes }} {% else %} N/A {% endif %} <br>
+                    Módosítva: {{ album.created_at }} - {{ album.user }}<br>
+                    Fékhossz: {% if album.fekhossz %} {{ album.fekhossz }} {% else %} N/A {% endif %}<br>
+                    Legutóbb ismert helyzet: {% if album.helyzet %} {{ album.helyzet }} {% else %} N/A {% endif %}<br>
+                    Ügyfélreferens megjegyzés: {% if album.megjegyzesek %} {{ album.megjegyzesek }} {% else %} N/A {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Song Info -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation"><a href="{% url 'rail:detail' album.id %}">View All</a></li>
+                <li role="presentation" class="active"><a href="{% url 'rail:create_vpe' album.id %}">VPE szám</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>VPE szám hozzáadása</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="album" value="{{ album }}">
+                        {% include 'rail/form_template.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
